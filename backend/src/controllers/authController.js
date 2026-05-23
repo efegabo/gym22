@@ -17,6 +17,7 @@ export const registerUser = async (req, res) => {
 }
 
 export const loginUser = async (req, res) => {
+    console.log("entro al loginUser");
     //  lógica de inicio de sesión 
     //verificar si el usuario existe
     try {
@@ -33,14 +34,14 @@ export const loginUser = async (req, res) => {
     //generar un token JWT
     const token = jsonwebtoken.sign(
         { id: user.id, email: user.email },
-         your_jwt_secret,
+         process.env.JWT_SECRET,
           { expiresIn: "1h" });
-    return res.cookies('access_token', token, {
+          // Enviar el token como una cookie segura
+    return res.cookie('access_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-    })
-    .status(200).json({ 
+    }).status(200).json({ // Enviar información adicional del usuario junto con el token
         message: "Login successful",
         id: user.id,
         nombre: user.nombre,
@@ -52,6 +53,7 @@ export const loginUser = async (req, res) => {
     }
     );
      }catch (error) {
+        console.error("Error en el inicio de sesión:", error);
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
 
