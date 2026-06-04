@@ -30,6 +30,7 @@ export async function register(nombreGym,nombre, email, password, rol, estado, i
         connection.release();
     }
 } 
+//función para obtener un usuario por su email, se utiliza en el login para verificar si el usuario existe y comparar la contraseña
 export const getUserByEmail = async (email) => {
     const pool = await createDatabase();
     const connection = await pool.getConnection();

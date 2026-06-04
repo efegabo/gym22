@@ -1,8 +1,11 @@
 import Input from "../components/input";
 import Button from "../components/button";
+import {useNavigate } from "react-router-dom";
+ 
 import {login} from "../services/autLogin";
 import { useState } from "react";
 function loginUser() {
+  const  navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -20,7 +23,8 @@ function loginUser() {
               // Llama a la función de registro y espera la respuesta
                     const data = await login(formData);
                     console.log("Usuario logueado:", data);
-                    //navigate('/login');   
+                  
+                     navigate('/dashboard'); // Redirige al dashboard después del login exitoso
                 } catch (error) {
                     console.error("Error en el inicio de sesión:", error);
                 }

@@ -31,11 +31,15 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid password" });
     }
+    if(user.rol !== 'admin') {
+        return res.status(403).json({ message: "Access denied, not an admin user" });
+    }
     //generar un token JWT
     const token = jsonwebtoken.sign(
-        { id: user.id, email: user.email },
+        { id: user.id_usuario, email: user.email },
          process.env.JWT_SECRET,
           { expiresIn: "1h" });
+          console.log("Login successful, token generated:", token);
           // Enviar el token como una cookie segura
     return res.cookie('access_token', token, {
         httpOnly: true,
@@ -52,9 +56,17 @@ export const loginUser = async (req, res) => {
 
     }
     );
+     
      }catch (error) {
         console.error("Error en el inicio de sesión:", error);
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
-
+}
+export const logoutUser = (req, res) => {
+    res.clearCookie('access_token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+    }).status(200).json({ message: "Logout successful" });
+    console.log("Logout successful, cookie cleared");
 }

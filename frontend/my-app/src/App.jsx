@@ -1,8 +1,8 @@
-import AuthRegister from "./pages/authRegister";
+ import AppRoute from "./routes/appRoute.jsx";
 
 function App() {
   return (  
-    <AuthRegister />
+    <AppRoute />
   );
 }
 
