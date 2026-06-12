@@ -1,8 +1,9 @@
 import Input from "../components/input";
-import Button from "../components/button";
-import {useNavigate } from "react-router-dom";
  
+import {useNavigate } from "react-router-dom";
+ import  {Link} from "react-router-dom";
 import {login} from "../services/autLogin";
+import {Box, Paper,Container, Grid,Button, TextField, Typography} from "@mui/material";
 import { useState } from "react";
 function loginUser() {
   const  navigate = useNavigate();
@@ -31,14 +32,81 @@ function loginUser() {
                 } 
     return (
         <div>
-            <h2>Login de Usuario</h2>
+            <Grid container >
+                <Grid size={{ xs: 12, sm: 12, md: 6 }} 
+                sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}> 
+            <Container maxWidth="sm" 
+         
+                sx={{
+             width: {
+             xs: "90%",
+               sm: "60%",
+               md: "70%",
+               },
+               mt: { xs: 7 },
+              padding: "2rem",
+              borderRadius: "1rem",
+            
+            }}  
+              > 
+            <Typography variant="h5" mb={3} align="center" >
+           Iniciar Sesión
+          </Typography>
             <form onSubmit={handleLogin}>   
-                <label htmlFor="">Correo Electrónico</label>
-                <Input name="email" type="email" placeholder="Correo Electrónico" onChange={handleChange} />
-                <label htmlFor="">Contraseña</label>
-                <Input name="password" type="password" placeholder="Contraseña" onChange={handleChange} />
-                <Button text="Iniciar Sesión" />
+                <Grid container spacing={2}  sx={{p:2 }} >
+                   <Grid  size={{ xs: 12, sm: 12, md: 12 }}  >
+                <TextField 
+                label="Correo Electrónico"
+                 variant="outlined" 
+                 fullWidth
+                  name="email"
+                  onChange={handleChange} />
+                </Grid> 
+                    <Grid  size={{ xs: 12, sm: 12, md: 12 }}>
+                    <TextField
+                label="Contraseña"
+                    variant="outlined"
+                    fullWidth
+                    name="password"
+                    onChange={handleChange}
+                />
+                </Grid>
+                 <Grid  size={{ xs: 12, sm: 12, md: 12 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                type="submit"
+                sx={{
+                  backgroundColor: "#292625", ":hover": { backgroundColor: "#544D4D" },
+                   }}
+              >
+                Iniciar Sesión
+              </Button>
+                
+                </Grid>
+                 </Grid>
             </form>
+            <p>¿No tienes una cuenta? <Link to="/register">Regístrate</Link></p>
+            </Container>
+             <div>
+             
+            </div>
+                </Grid>
+                    <Grid size={{ xs: 12, sm: 12, md: 6 }}
+                    sx={{display: { xs: "none", md: "block" } }}>
+                    <Box
+                    component="img"
+                    src="/public/gymH.jpg"
+                    alt="Imagen de Gimnasio"
+                    sx={{
+                        width: "100%",
+                        height: "100vh",
+                        objectFit: "cover",
+                    }}
+                    />
+                 
+                    </Grid>
+                </Grid>
         </div>
     )
    

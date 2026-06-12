@@ -1,5 +1,7 @@
  import {useNavigate} from "react-router-dom";
  import {logout} from "../services/authLogout";
+ import Button from '@mui/material/Button';
+
  
  const buttonLogout =  () => {
 
@@ -9,7 +11,9 @@
         navigate("/login");
     };
     return (
-        <button onClick={handleLogout}>Logout</button>
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
+            Logout
+        </Button>
     )
 }
 export default buttonLogout;

@@ -1,6 +1,8 @@
 import ButtonLogout from "../../components/buttonLogout";
 import UserForm from "../../components/user/userForm";
  import {getPlanes} from "../../services/planesServices";
+ import {Avatar, Container} from "@mui/material";
+  
 import { useEffect, useState } from "react";
 const Users = () => {
     const [planes, setPlanes] = useState([]);
@@ -19,10 +21,11 @@ const Users = () => {
     }, []);
     return (
         <div>   
-              <ButtonLogout />
-            <h1>Usuarios</h1>
-            <UserForm planes={planes} />
-           
+            <Avatar src="/public/avatar.png" />
+            
+                 <UserForm planes={planes} />
+       
+            
         </div>
     );
 }

@@ -1,8 +1,17 @@
+import Sidebar from "../../components/sidebar";
+import {Grid, Container, Box} from "@mui/material";
+import Navbar from "../../components/navbar"
 const AdminLayout = ({ children }) => {
     return (
         <div>
-            <h1>Admin Layout</h1>
-            {children}
+            
+            <Navbar />
+             <Box sx={{ display: "flex", minHeight: "100vh"}}>
+                        <Sidebar />
+                        <Box sx={{flexGrow: 1, p: 3}}> 
+                          {children}
+                        </Box>
+                          </Box>
         </div>
     );
 }

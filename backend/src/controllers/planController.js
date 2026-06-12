@@ -16,3 +16,5 @@ export const getAllPlanes = async(req, res) => {
         res.status(500).json({message: "Error obteniendo los planes", error: error.message})
     }
 }
+
+ 
