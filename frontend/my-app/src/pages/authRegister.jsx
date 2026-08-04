@@ -76,7 +76,7 @@ function AuthRegister() {
             }}  
             
               > 
-        
+            
            <Typography variant="h5" mb={3} align="center"    >
             Registro de Usuario
           </Typography>
@@ -141,7 +141,9 @@ function AuthRegister() {
          <div>
             <p>¿Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link></p>
             </div>
-
+              <div>
+            <p>¿Ya formas parte de un Gimnasio <Link to="/loginClient">Inicia Sesión</Link></p>
+            </div>
             </Container>
             </Grid>
         </Grid>

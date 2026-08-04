@@ -5,12 +5,14 @@ import {useNavigate } from "react-router-dom";
 import {login} from "../services/autLogin";
 import {Box, Paper,Container, Grid,Button, TextField, Typography} from "@mui/material";
 import { useState } from "react";
+
 function loginUser() {
   const  navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+    
     const handleChange = (e) => {
         setFormData({
             ...formData,

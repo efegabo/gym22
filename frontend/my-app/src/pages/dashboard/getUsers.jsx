@@ -1,4 +1,4 @@
-import getClientes from "../../services/gestionUser/getCliente";
+import {getClientes, deleteCliente} from "../../services/gestionUser/getCliente";
  import { Typography} from "@mui/material";
 import QrModal from "../../components/user/qrModal";
 import QrCliente from "../../services/gestionUser/qrClient";
@@ -58,6 +58,15 @@ const usuarios =()=>{
             console.error("Error al obtener el código QR del cliente:", error);
         }
     };
+    const eliminarUsuario =async (id_usuario)=>{
+        try{
+            await deleteCliente(id_usuario)
+            console.log("usuario eliminado")
+        }catch(error){
+            console.error("Error al obtener el código QR del cliente:", error);
+        }
+    }
+     
     return (
         /*
         <div>
@@ -91,13 +100,18 @@ const usuarios =()=>{
                     { field: 'telefono', headerName: 'Teléfono', width: 200 },
                     { field: 'qr', headerName:'Qr del usuario', width:100, 
                         renderCell:(params)=>( 
-                        <Button
-                            
+                        <Button 
                         onClick={() => abrirModal(params.row.id_usuario)} >
                             Ver qr
                           </Button>
                             )
-                    }
+                    },
+                    { field: 'Eliminar', headerName: 'Accion', width: 200, 
+                        renderCell:(params)=>(
+                           <Button onClick={function(){eliminarUsuario(params.row.id_usuario)}} >Eliminar</Button> 
+                        )
+                     }
+
                 ]}
                 pageSize={5}
                 rowsPerPageOptions={[5]}

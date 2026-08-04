@@ -18,3 +18,18 @@
     }
 };
     
+ export const obtenerQrClienteID = async (req, res) => {
+  
+    try {
+        const  id_usuario = req.id;
+        console.log("ID del usuario recibido:", id_usuario); // Verificar que se recibe el ID del usuario
+
+        const codigoQr = await obtenerQrporUsuario(id_usuario);
+        const imagenQr = await generateQrCode(codigoQr);
+
+        res.status(200).json({ qrCode: imagenQr });
+    } catch (error) {
+        console.error("Error al obtener el código QR del usuario:", error);
+        res.status(500).json({ message: "Error al obtener el código QR del usuario" });
+    }
+};

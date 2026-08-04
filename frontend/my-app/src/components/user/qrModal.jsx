@@ -1,4 +1,5 @@
-import { Modal, Box, Typography } from "@mui/material";
+import { Modal, Box, Typography,ListItem,ListItemText  } from "@mui/material";
+import List from '@mui/material/List';
 const qrModal = ({ open, onClose, qr }) => {
 
         const style = {
@@ -8,7 +9,7 @@ const qrModal = ({ open, onClose, qr }) => {
             transform: "translate(-50%, -50%)",
             width: 400,
             bgcolor: "background.paper",
-            
+            display:"flex",
             borderRadius: 2,
             p: 4,
             };
@@ -27,14 +28,8 @@ const qrModal = ({ open, onClose, qr }) => {
     >
         
       <Box sx={style} >
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          gutterBottom
-        >
-          QR del Usuario
-        </Typography>
+         <Box> 
+        
 
         {qr && (
           <img
@@ -44,8 +39,36 @@ const qrModal = ({ open, onClose, qr }) => {
               width: "50%",
                
             }}
+            
           />
         )}
+          
+        </Box>
+           <Box> 
+             <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                gutterBottom
+                >
+         Datos del usuario
+        </Typography>
+       
+            <List >                      
+              
+                <ListItem>
+                  <ListItemText
+                  primary="Correo:" 
+                  />
+                  <ListItemText
+                  primary="sexo:" 
+                  />
+                </ListItem>
+                
+              
+            </List>
+        
+             </Box>
       </Box>
     </Modal>
     );

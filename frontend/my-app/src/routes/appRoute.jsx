@@ -8,6 +8,11 @@ import Planes from "../pages/dashboard/planes.jsx";
 import { ProtectedRouter } from "./protectedRouter.jsx";
 import AdminLayout from "../components/layout/adminLayout.jsx";
 import GetUsers from "../pages/dashboard/getUsers.jsx";
+import AuthLoginCliente from "../pages/authLoginCliente.jsx";
+import MenuCliente from "../pages/clienteProfile/clienteMenu.jsx"
+import Escanear from "../pages/dashboard/escanear.jsx"
+import EstadisticasClinte from "../pages/clienteProfile/estadisticas.jsx"
+ 
 function AppRoute() {
     return (
         <Routes>
@@ -43,6 +48,31 @@ function AppRoute() {
                   </AdminLayout>
               </ProtectedRouter>
           } />
+          <Route path='/loginClient' element={    
+                       <AuthLoginCliente />
+          } />
+               <Route path='/mainClient' element={
+               <ProtectedRouter redirect="/register">
+                 
+                       <MenuCliente />
+               
+              </ProtectedRouter>
+          } />
+          <Route path='/escanear' element={
+               <ProtectedRouter redirect="/register">
+                  <AdminLayout>
+                           <Escanear />
+                    </AdminLayout>
+                 </ProtectedRouter>
+          } />
+          <Route path='/estadisticas' element={
+               <ProtectedRouter redirect="/register">
+                   
+                           <EstadisticasClinte />
+               
+                 </ProtectedRouter>
+          } />
+           
          <Route path='*' element={<NotFound />} />
       </Routes>
     );

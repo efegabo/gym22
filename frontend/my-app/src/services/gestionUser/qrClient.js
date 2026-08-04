@@ -19,3 +19,4 @@ const qrClient = async (id_usuario) => {
     }
 }
 export default qrClient;    
+
