@@ -1,6 +1,6 @@
  
 import ButtonLogout from "../../components/buttonLogout";
-import QrCliente from "../../services/gestionUser/qrClient";
+import {qrClient} from "../../services/gestionUser/qrClient";
 import {getClienteId} from "../../services/gestionUser/getCliente";
 import { useState, useEffect } from "react";
 import Navbar from '../../components/mobile/navbar'
@@ -25,7 +25,7 @@ const menuCliente = ()=>{
     const [qr, setQr] = useState(null);
      const [loanding, setLoanding] = useState(true);
     const qrs = async (id_usuario)=>{
-        const qrMostrar = await QrCliente(id_usuario)
+        const qrMostrar = await qrClient(id_usuario)
           setQr(qrMostrar)
           setLoanding(false)                
     }
@@ -66,7 +66,7 @@ const menuCliente = ()=>{
 
                     {qr && (
                         <Box sx={{ display: "flex", justifyContent:"center"}}>
-                            <Box component="img" src={qr}  alt="QR" sx={{ width:"70%", maxWidth:200, height:"auto", mb:2}}  />
+                            <Box component="img" src={qr.qrCode}  alt="QR" sx={{ width:"70%", maxWidth:200, height:"auto", mb:2}}  />
                         </Box>
                      
                     )}

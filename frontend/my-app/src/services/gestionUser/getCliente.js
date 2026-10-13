@@ -195,3 +195,23 @@ export const asistenciaIdCliente = async () => {
         throw error;
     } 
 }
+
+export const horasEstadisticas = async () => {
+    try {
+        const cantUsua = await fetch(`http://localhost:3000/api/cliente/estadisticasHoras`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!cantUsua.ok) {
+            throw new Error("Error al obtener las estadisticas de horas");
+        }
+        const data = await cantUsua.json();
+        return data;
+    } catch (error) {
+        console.error("Error al obtener las estadisticas de horas:", error);
+        throw error;
+    } 
+}

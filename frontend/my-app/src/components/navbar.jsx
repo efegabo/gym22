@@ -38,6 +38,16 @@ function navbar( {text}) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    function fechaActual (){
+                const fecha = new Date();
+                const fechaFormateada = fecha.toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                return fechaFormateada;
+            }
     return (
         <div>
             <Box sx={{ width: "100%", height: "10vh", display:{ xs: "none", sm: "block"}}}>
@@ -53,11 +63,16 @@ function navbar( {text}) {
                     }}>
                         <Box sx={{ display: "flex", alignItems: "center", ml: 4, }}>
                               <Typography variant="body1"  >
-                                    ¡Hola! Bienvenido
+                                    ¡Hola! Bienvenido 
+                                       
                                 </Typography><ListItemIcon sx={{color: "#4F9D69"}}> <FaceRetouchingNaturalIcon /> </ListItemIcon>
+                                <Typography variant="body2"  >
+                                     
+                                      {fechaActual()}
+                                </Typography>
                         </Box>
                       <Box sx={{ display: "flex", alignItems: "center" }}> 
-                        {text}
+                         
                         <Tooltip title="Account settings">
                             <IconButton
                                 onClick={handleClick}

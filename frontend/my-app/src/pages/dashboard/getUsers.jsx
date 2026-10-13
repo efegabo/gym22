@@ -1,22 +1,22 @@
-import {getClientes, deleteCliente} from "../../services/gestionUser/getCliente";
- import { Typography} from "@mui/material";
+import {getClientes, deleteCliente, actualizarClienteEstado} from "../../services/gestionUser/getCliente";
+ import { Typography, Chip} from "@mui/material";
 import QrModal from "../../components/user/qrModal";
-import QrCliente from "../../services/gestionUser/qrClient";
+import {qrClient} from "../../services/gestionUser/qrClient";
 import { DataGrid } from '@mui/x-data-grid';  
-import {Button} from "@mui/material";
-
+import {Button, Grid, Box} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditSquareIcon from '@mui/icons-material/EditSquare';
 import { useState, useEffect } from "react";
 const usuarios =()=>{
     //ESTADO PARA GUARDAR LOS CLIENTES Y EL QR
     const [clientes, setClientes] = useState([]);
-    
-     
     const [open, setOpen] = useState(false);
     const [qr, setQr] = useState("");
     const handleOpen = () => setOpen(true);
     /*function handleOpen (){
         setOpen(true)
     }*/
+   
     const handleClose = () => setOpen(false);
 
     
@@ -49,7 +49,7 @@ const usuarios =()=>{
     const abrirModal = async (id_usuario) => {
           console.log("Click en cliente:", id_usuario); // Verificar que se recibe el ID del cliente
         try {
-            const qrCode = await QrCliente(id_usuario);
+            const qrCode = await qrClient(id_usuario);
                console.log(qrCode);
             setQr(qrCode); // qrClient ya devuelve solo el código QR
             setOpen(true);
@@ -85,20 +85,31 @@ const usuarios =()=>{
             {mostrarModal && 
             <QrModal onClose={() => setMostrarModal(false)} qrCode={qr} />}
         </div>*/
-        <div>
-           <Typography variant="h5" mb={3} align="center" >
+       <Grid size={{xs:12, md:12}}  >
+        <Box sx={{width:"100%", mt:5, mb:5}} >
+            <Box sx={{mb:3,  }} >
+                <Typography variant="h5" align="left" sx={{mb:2}} >
            Clientes
           </Typography>
+          <Typography variant="body2" align="left"> 
+          En esta sección puedes ver todos los clientes registrados en el sistema, así como sus datos de contacto y su código QR.
+          </Typography>
+                </Box> 
+            
             <DataGrid
-                sx={{width:"80%",  mx:"auto"}}
+                sx={{width:"98%",  mx:"auto",  '& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold', color: '#4A4A4A',},}}
                 rows={clientes}
                   getRowId={(row) => row.id_usuario}
                 columns={[
-                    { field: 'id_usuario', headerName: 'ID', width: 100 },
-                    { field: 'nombre', headerName: 'Nombre', width: 200 },
-                    { field: 'apellido', headerName: 'Apellido', width: 200 },
-                    { field: 'telefono', headerName: 'Teléfono', width: 200 },
-                    { field: 'qr', headerName:'Qr del usuario', width:100, 
+                    { field: 'id_usuario', headerName: 'ID', width: 100,headerAlign: 'center', align: 'center' },   
+                    { field: 'nombre', headerName: 'Nombre', width: 100,headerAlign: 'center', align: 'center' },
+                    { field: 'apellido', headerName: 'Apellido', width: 100,headerAlign: 'center', align: 'center' },
+                    { field: 'telefono', headerName: 'Teléfono', width: 150,headerAlign: 'center', align: 'center' },
+                     { field: 'estado', headerName: 'estado', width: 150,headerAlign: 'center', align: 'center', renderCell:(params)=>(
+                                            <Chip
+                                            label={params.value} color={params.value === "Activo" ? "success" : "error"}  size="small" variant="filled"
+                                            />) },
+                    { field: 'qr', headerName:'Qr del usuario', width:150, align: 'center', headerAlign: 'center',
                         renderCell:(params)=>( 
                         <Button 
                         onClick={() => abrirModal(params.row.id_usuario)} >
@@ -106,9 +117,23 @@ const usuarios =()=>{
                           </Button>
                             )
                     },
-                    { field: 'Eliminar', headerName: 'Accion', width: 200, 
+                    { field: 'Eliminar', headerName: 'Accion', width: 180,headerAlign: 'center', align: 'center',
                         renderCell:(params)=>(
-                           <Button onClick={function(){eliminarUsuario(params.row.id_usuario)}} >Eliminar</Button> 
+                            <Box sx={{ display: 'flex',   }}>
+      
+                                <Button
+                                    onClick={() => eliminarUsuario(params.row.id_usuario)}
+                                >
+                                    <DeleteIcon  sx={{ color: '#E8573A' }} />
+                                </Button>
+
+                                <Button
+                                    onClick={() => editarUsuario(params.row.id_usuario)}
+                                >
+                                    <EditSquareIcon sx={{ color: '#4F9D69' }} />
+                                </Button>
+
+                                </Box>
                         )
                      }
 
@@ -122,8 +147,8 @@ const usuarios =()=>{
                 qr={qr}
                 />
 
-            
-        </div>
+            </Box>
+         </Grid>
     );
 }   
 export default usuarios;

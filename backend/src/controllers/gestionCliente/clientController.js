@@ -1,12 +1,13 @@
  
 import {createUserClient, getUsers,getUserId,deleteUser, registrarAsistencia, getAsistencias, 
-    cantidadPlanes, cantidadClientesActivos, cantidadTotalClientes, actualizarEstadoDeSuscribciones, obtenerAsistenciaClienteId} from "../../querys/gestionUsers.js";
+    cantidadPlanes, cantidadClientesActivos, cantidadTotalClientes, actualizarEstadoDeSuscribciones,
+     obtenerAsistenciaClienteId, cantidadHoras} from "../../querys/gestionUsers.js";
 
 export const createClient = async (req, res) => {
    try {
         const { nombre, apellido, telefono, fechaNacimiento, sexo, email, password, plan_id_gym } = req.body;
         const rol = 'cliente'; // Asignar un rol predeterminado
-        const estado = 'activo'; // Asignar un estado predeterminado
+        const estado = 'Activo'; // Asignar un estado predeterminado
         const usuarioAdmin = req.id; // Obtener el ID del usuario administrador desde el token de autenticación
         console.log("usuarioAdmin:", usuarioAdmin);
         const user = await createUserClient(nombre, apellido, telefono, fechaNacimiento, sexo, email, password, rol, estado, usuarioAdmin, plan_id_gym);
@@ -95,7 +96,7 @@ export const registrarAsistencias = async (req, res) => {
         const id_gym = req.id_gym;
         const { estado } = req.params;
 
-        // Convierte el valor de la URL al valor almacenado en la BD
+         // Convertir el estado recibido a mayúsculas para que coincida con los valores en la base de datos
         const estadoBD = estado === "activo" ? "Activo" : "Inactivo";
 
         const clientes = await cantidadClientesActivos(
@@ -148,4 +149,14 @@ export const registrarAsistencias = async (req, res) => {
         }
     }
 
+    export const estadisticasHoras= async (req, res)=>{
+        try{
+            const id_gym = req.id_gym;
+            const estadisticas = await cantidadHoras(id_gym);
+            res.status(200).json({ message: "Estadisticas de horas obtenidas correctamente", estadisticas });
+        }catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error obteniendo las estadisticas de horas", error: error.message });
+        }
+     }
      

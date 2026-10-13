@@ -1,4 +1,4 @@
-const qrClient = async (id_usuario) => {
+export const qrClient = async (id_usuario) => {
     try {
         const response = await fetch(`http://localhost:3000/api/cliente_qr/qr/${id_usuario}`, {
             method: "GET",
@@ -12,11 +12,28 @@ const qrClient = async (id_usuario) => {
             throw new Error("Error al obtener el código QR del cliente");
         }   
         const data = await response.json();
-        return data.qrCode; // Devuelve solo el código QR
+        return data; // Devuelve el objeto completo con el código QR
     } catch (error) {
         console.error("Error al obtener el código QR del cliente:", error);
         throw error;
     }
 }
-export default qrClient;    
 
+export const informacionClienteQr = async (uidd) => {   
+    try{
+        const res= await fetch(`http://localhost:3000/api/cliente_qr/informacionUser/${uidd}`, {
+            method:"GET",
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json",
+            } }
+        )
+        const data = await res.json();
+        return data;
+    }catch(error){
+        console.error("Error al obtener la información del cliente:", error);
+        throw error;
+    }
+
+
+}

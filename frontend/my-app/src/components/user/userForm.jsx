@@ -15,9 +15,10 @@ import {
   Radio,
   MenuItem,
   InputLabel,
-  Select
+  Select,
+  Divider
 } from "@mui/material";
-
+import SidevarUser from "./sidervarUser";
 const formularioUser = ({ planes }) => {
      const [formData, setFormData] = useState({
         nombre: "",
@@ -48,11 +49,36 @@ const formularioUser = ({ planes }) => {
         <div>
                     <Container  >
                      <Paper elevation={0}
-                            sx={{ p: 4, width:{xs: "100%",sm: "60%", md: "70%"}, borderRadius: 3, mx:"auto"}} > 
-                        <Typography variant="h5" align="center">
-                            Crear Cuenta de usuario
-                        </Typography>
+                            sx={{ p: 4, width:{xs: "100%",sm: "60%", md: "100%", display: "flex"}, borderRadius: 1, mx:"auto"}} > 
+                         <SidevarUser />
+                         <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
                          <form onSubmit={handleSubmit}>
+                            <Grid container spacing={2}  sx={{p:2, display:"flex" }} size={{ xs: 12, sm: 12, md: 12}}>
+                                <Grid size={{ xs: 12, sm: 12, md: 6}}>
+                        <Typography variant="h5" align="left">
+                            Informacion General
+                        </Typography>
+                        <Typography variant="body2" align="left">
+                            Asegurate de llenar todos los campos correctamente.
+                        </Typography>
+                                </Grid>
+                             
+                        <Grid size={{ xs: 6, sm: 6, md: 6}}  > 
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="large"
+                                        sx={{width:"100%", 
+                                             backgroundColor: "#4F9D69", ":hover": { backgroundColor: "#68D89B"}} }
+                                        >
+                                         <Typography variant="body2" align="left">
+                                            Crear Usuario
+                                             </Typography>
+                                        </Button>
+                                </Grid> 
+                                </Grid>
+                        <Divider sx={{ my: 2 }} />
+                        
                              <Grid container spacing={2} sx={{p:2 }}> 
                                 <Grid size={{ xs: 12, sm: 12, md: 6 }}    > 
                                     <TextField label="Nombre" variant="filled" name="nombre" onChange={handleChange} sx={{width:"100%"}}/>
@@ -121,17 +147,7 @@ const formularioUser = ({ planes }) => {
                                         </RadioGroup>
                                         </FormControl>
                                  </Grid>
-                                 <Grid size={{ xs: 12, sm: 12, md: 12}}  > 
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        size="large"
-                                        sx={{width:"100%", 
-                                             backgroundColor: "#292625", ":hover": { backgroundColor: "#544D4D"}} }
-                                        >
-                                        Crear Usuario
-                                        </Button>
-                                </Grid> 
+                                  
                                     
                             </Grid> 
                          </form>

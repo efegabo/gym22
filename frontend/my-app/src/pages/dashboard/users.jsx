@@ -21,7 +21,7 @@ const Users = () => {
     }, []);
     return (
         <div>   
-            <Avatar src="/public/avatar.png" />
+             
                  <UserForm planes={planes} />
         </div>
     );

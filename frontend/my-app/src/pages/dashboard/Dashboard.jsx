@@ -1,59 +1,60 @@
 import ButtonLogout from "../../components/buttonLogout";
- 
+
 
 import {
-  Box,
-  Container,
-  Paper,
-  Grid,
-  Button,
-  TextField,
-  Typography,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  MenuItem,
-  InputLabel,
-  Select,
-  Dialog, 
-  Chip
+    Box,
+    Container,
+    Paper,
+    Grid,
+    Button,
+    TextField,
+    Typography,
+    FormControl,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    MenuItem,
+    InputLabel,
+    Select,
+    Dialog,
+    Chip
 } from "@mui/material";
 import Sidebar from "../../components/sidebar";
- import { DataGrid } from '@mui/x-data-grid';  
+import { DataGrid } from '@mui/x-data-grid';
 import GroupIcon from '@mui/icons-material/Group';
-  import ListItemIcon from '@mui/material/ListItemIcon';
-  import Divider from "@mui/material/Divider";
-  import CalculateIcon from '@mui/icons-material/Calculate';
-  import AddReactionIcon from '@mui/icons-material/AddReaction';
-  import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
-  import DescriptionIcon from '@mui/icons-material/Description';
-import {getUltimasAsistencias, cantidadPlanes, cantidadClientes, cantidadClientesTotal, actualizarClienteEstado} from "../../services/gestionUser/getCliente";
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from "@mui/material/Divider";
+import CalculateIcon from '@mui/icons-material/Calculate';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import DescriptionIcon from '@mui/icons-material/Description';
+import { getUltimasAsistencias, cantidadPlanes, cantidadClientes,
+     cantidadClientesTotal, actualizarClienteEstado, horasEstadisticas} from "../../services/gestionUser/getCliente";
 import { useState, useEffect } from "react";
-import {PieChart, Pie, Cell, Legend, Tooltip} from "recharts";
+import { PieChart, Pie, Cell, Legend, Tooltip, BarChart,XAxis ,Bar, CartesianGrid  } from "recharts";
 const dashboard = () => {
 
     const actualizarEstadosCl = async () => {
-            try {
-                 await actualizarClienteEstado();
-            }   
-            catch (error) {
-                console.error("Error al actulizar estados del clinte:", error);
-            }
-        };
-        useEffect(() => {
-               actualizarEstadosCl();
-             }, []);
-     const [ultimasAsistencias, setUltimasAsistencias] = useState([]);
+        try {
+            await actualizarClienteEstado();
+        }
+        catch (error) {
+            console.error("Error al actulizar estados del clinte:", error);
+        }
+    };
+    useEffect(() => {
+        actualizarEstadosCl();
+    }, []);
+    const [ultimasAsistencias, setUltimasAsistencias] = useState([]);
     useEffect(() => {
         const fetchUltimasAsistencias = async () => {
             try {
                 const asistencias = await getUltimasAsistencias();
-               
-                setUltimasAsistencias( asistencias);
-                console.log("asistencias",ultimasAsistencias.asistencias);
-            }   
+
+                setUltimasAsistencias(asistencias);
+                console.log("asistencias", ultimasAsistencias.asistencias);
+            }
             catch (error) {
                 console.error("Error al obtener las últimas asistencias:", error);
             }
@@ -87,7 +88,7 @@ const dashboard = () => {
         fetchCantidadClientes();
     }, []);
     const [cantidadClienteInactiv, setCantidadClientesInac] = useState();
-     useEffect(() => {
+    useEffect(() => {
         const fetchCantidadClientesInac = async () => {
             try {
                 const clientes = await cantidadClientes("inactivos");
@@ -101,7 +102,7 @@ const dashboard = () => {
     }, []);
 
     const [cantidadTotalCl, setCantidadClientesTotal] = useState();
-     useEffect(() => {
+    useEffect(() => {
         const fetchCantidadClientesTotal = async () => {
             try {
                 const clientes = await cantidadClientesTotal();
@@ -113,195 +114,395 @@ const dashboard = () => {
         };
         fetchCantidadClientesTotal();
     }, []);
-            const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+
+   
+    const [horas, setHorasEstadisticas] = useState([]);
+    useEffect(() => {
+        const fetchHorasEstadisticas = async () => {
+            try {
+                const estadisticas = await horasEstadisticas();
+                console.log("Estadisticas de horas:", estadisticas);
+                setHorasEstadisticas(estadisticas.estadisticas || []);
+            }
+            catch (error) {
+                console.error("Error al obtener las estadisticas de horas:", error);
+            }  
+        };
+        fetchHorasEstadisticas();
+    }, []);
+      const horass = [
+        "06:00", "07:00", "08:00", "09:00",
+        "10:00", "11:00", "12:00", "13:00",
+        "14:00", "15:00", "16:00", "17:00",
+        "18:00", "19:00", "20:00", "21:00"
+        ];
+        const datosGrafico =horass.map((hours)=>{
+            const convHoraNumero = Number(hours.substring(0,2)) //toma los dos primeros caracteres
+            const coincidenciaHoras =  horas.find((item)=>Number(item.hora)=== convHoraNumero)
+            return {
+                hours, Cantidad:coincidenciaHoras ? coincidenciaHoras.Cantidad : 0
+            }
+        })
+         
     return (
         <div>
-            <Container >
-                <Box sx={{backgroundColor: "rgba(131, 217, 121, 0.2)",  border: "2px solid rgba(255, 255, 255, 1)", p:2, boder:"4px solid black", borderRadius:3, mb:3}}>
-                   <ListItemIcon  >
-                            <DescriptionIcon  />
-                        </ListItemIcon>
-                    <Typography variant="h7" >
-                        Consulta de datos del sistema
-                    </Typography>
-                     
-                </Box>
-                <Grid  sx={{display:"flex"}}  >
-                   {/*clientes totales*/}  
-                     <Grid >
-                        <Paper elevation={0} sx={{p:2,m:1, borderRadius: 3, background:"linear-gradient(90deg, #68D89B, #4F9D69)"}}>
-                            <Box sx={{mb:4, display:"flex"}}>
-                                <Box>
-                                 <Typography variant="h8" align="center" sx={{ color: "#fff" }}>
-                                     Total de clientes
-                                </Typography>
-                                <p style={{ color: "#fff", fontSize: "2rem", fontWeight: "bold" }}>
-                                {cantidadTotalCl}
-                            </p>
-                                </Box>
-                            <Box>
-                        <ListItemIcon sx={{color: "#fff", ml: 5}}>
-                            <GroupIcon fontSize="large" />
-                        </ListItemIcon>
-                            </Box>
-                            </Box>
-                            <Divider sx={{borderColor: "#fff"}} />
-                            <Box>
-                        <Typography variant="h9"  align="center" sx={{ color: "#fff", fontSize:"0.8rem" }}>
-                           Ultimos por mes: 
-                        </Typography>
-                            </Box>
-                        </Paper>
-                     </Grid>
-                      {/*Ingresos */}  
-                      <Grid sx={{display:"flex"}}  >
-                   
-                     <Grid >
-                        <Paper elevation={0} sx={{p:2,m:1, borderRadius: 3, background:"linear-gradient(90deg, #A1D422, #58633F)"}}>
-                            <Box sx={{mb:4, display:"flex"}}>
-                                <Box>
-                                 <Typography variant="h8" align="center" sx={{ color: "#fff" }}>
-                                     Ingresos
-                                </Typography>
-                                <p style={{ color: "#fff", fontSize: "2rem", fontWeight: "bold" }}>
-                                N/N
-                            </p>
-                                </Box>
-                            <Box>
-                        <ListItemIcon sx={{color: "#fff", ml: 5}}>
-                            <CalculateIcon fontSize="large" />
-                        </ListItemIcon>
-                            </Box>
-                            </Box>
-                            <Divider sx={{borderColor: "#fff"}} />
-                            <Box>
-                        <Typography variant="h9"  align="center" sx={{ color: "#fff", fontSize:"0.8rem" }}>
-                           Ultimos por mes: 
-                        </Typography>
-                            </Box>
-                        </Paper>
-                     </Grid>
-                      </Grid>
-                      {/* Clientes activos */}
-                     <Grid>
-                        <Grid sx={{display:"flex"}}  >
-                   
-                     <Grid >
-                        <Paper elevation={0} sx={{p:2,m:1, borderRadius: 3, background:"linear-gradient(90deg, #474EFF, #59D0FF)"}}>
-                            <Box sx={{mb:4, display:"flex"}}>
-                                <Box>
-                                 <Typography variant="h8" align="center" sx={{ color: "#fff" }}>
-                                     Clientes Activos
-                                </Typography>
-                                <p style={{ color: "#fff", fontSize: "2rem", fontWeight: "bold" }}>
-                                 {cantidadCliente}
-                            </p>
-                                </Box>
-                            <Box>
-                        <ListItemIcon sx={{color: "#fff", ml: 5}}>
-                            <AddReactionIcon fontSize="large" />
-                        </ListItemIcon>
-                            </Box>
-                            </Box>
-                            <Divider sx={{borderColor: "#fff"}} />
-                            <Box>
-                        <Typography variant="h9"  align="center" sx={{ color: "#fff", fontSize:"0.8rem" }}>
-                           Ultimos por mes: 
-                        </Typography>
-                            </Box>
-                        </Paper>
-                     </Grid>
-                      </Grid>
-                         
-                     </Grid>
-                     {/*clientes inactivos */}
-                      <Grid>
-                        <Grid sx={{display:"flex"}}  >
-                   
-                     <Grid >
-                        <Paper elevation={0} sx={{p:2,m:1, borderRadius: 3, background:"linear-gradient(90deg, #FF0033, #FF5959)"}}>
-                            <Box sx={{mb:4, display:"flex"}}>
-                                <Box>
-                                 <Typography variant="h8" align="center" sx={{ color: "#fff" }}>
-                                     Clientes Inactivos
-                                </Typography>
-                                <p style={{ color: "#fff", fontSize: "2rem", fontWeight: "bold" }}>
-                                {cantidadClienteInactiv}
-                            </p>
-                                </Box>
-                            <Box>
-                        <ListItemIcon sx={{color: "#fff", ml: 5}}>
-                            <SentimentDissatisfiedIcon fontSize="large" />
-                        </ListItemIcon>
-                            </Box>
-                            </Box>
-                            <Divider sx={{borderColor: "#fff"}} />
-                            <Box>
-                        <Typography variant="h9"  align="center" sx={{ color: "#fff", fontSize:"0.8rem" }}>
-                           Ultimos por mes: 
-                        </Typography>
-                            </Box>
-                        </Paper>
-                     </Grid>
-                      </Grid>
-                         
-                     </Grid>
-                </Grid>
-                <Grid  container spacing={3} sx={{mt: 3}}>
+            <Container>
+                <Typography variant="h5" sx={{ mt: 2, mb: 2 }}>
+                    Dashboard
 
-               <Grid size={{xs:12, md:6}}  > 
-                    {/* ultimos ingresos */}
-                <Box >
-                    <Typography variant="h7"   >
-                        Ultimos ingresos de hoy
-                    </Typography>
-                     <DataGrid
-                                    sx={{width:"92%", borderRadius:2}}
-                                    rows={ultimasAsistencias.asistencias || []}
-                                    getRowId={(row) => row.id_asistencia}
-                                    columns={[
-                                        { field: 'Cliente', headerName: 'Cliente', width: 150 },
-                                        { field: 'Hora', headerName: 'Hora', width: 150 },
-                                        { field: 'Estado', headerName: 'Estado', width: 150, renderCell:(params)=>(
-                                            <Chip
-                                            label={params.value} color={params.value === "Activo" ? "success" : "error"}  size="small" variant="filled"
-                                            />
-                                        ) },
-                                    ]}
-                                     hideFooter
-                                     slots={{ noRowsOverlay: () => <Typography>No hay datos para mostrar</Typography>}}
+                </Typography>
+                <Grid
+                    container
+                    spacing={2}
+                    alignItems="stretch"
+                >
+                    {/* Total clientes */}
+                    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2,
+                                borderRadius: 3,
+                                backgroundColor: "#4F9D69",
+                                height: "100%",
+                                boxSizing: "border-box"
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: "#fff" }}
+                                    >
+                                        Total de clientes
+                                    </Typography>
+
+                                    <Typography
+                                        sx={{
+                                            color: "#fff",
+                                            fontSize: "2.5rem",
+                                            fontWeight: "bold"
+                                        }}
+                                    >
+                                        {cantidadTotalCl}
+                                    </Typography>
+                                </Box>
+
+                                <GroupIcon
+                                    sx={{
+                                        color: "#fff",
+                                        fontSize: 40
+                                    }}
                                 />
-                </Box>
+                            </Box>
+
+                            <Divider
+                                sx={{
+                                    my: 2,
+                                    borderColor: "#fff"
+                                }}
+                            />
+
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "#fff",
+                                    fontSize: "0.7rem"
+                                }}
+                            >
+                                Últimos por mes:
+                            </Typography>
+                        </Paper>
+                    </Grid>
+
+
+                    {/* Ingresos */}
+                    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2,
+                                borderRadius: 3,
+                                border: "1px solid #D1D0CF",
+                                backgroundColor: "#fff",
+                                height: "100%",
+                                boxSizing: "border-box"
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: "#7A7A7A" }}
+                                    >
+                                        Ingresos
+                                    </Typography>
+
+                                    <Typography
+                                        sx={{
+                                            color: "#7A7A7A",
+                                            fontSize: "2.5rem",
+                                            fontWeight: "bold"
+                                        }}
+                                    >
+                                        N/N
+                                    </Typography>
+                                </Box>
+
+                                <CalculateIcon
+                                    sx={{
+                                        color: "#4F9D69",
+                                        fontSize: 40
+                                    }}
+                                />
+                            </Box>
+
+                            <Divider
+                                sx={{
+                                    my: 2,
+                                    borderColor: "#7A7A7A"
+                                }}
+                            />
+
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "#7A7A7A",
+                                    fontSize: "0.7rem"
+                                }}
+                            >
+                                Últimos por mes:
+                            </Typography>
+                        </Paper>
+                    </Grid>
+
+
+                    {/* Clientes activos */}
+                    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2,
+                                borderRadius: 3,
+                                border: "1px solid #D1D0CF",
+                                backgroundColor: "#fff",
+                                height: "100%",
+                                boxSizing: "border-box"
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: "#7A7A7A" }}
+                                    >
+                                        Clientes activos
+                                    </Typography>
+
+                                    <Typography
+                                        sx={{
+                                            color: "#7A7A7A",
+                                            fontSize: "2.5rem",
+                                            fontWeight: "bold"
+                                        }}
+                                    >
+                                        {cantidadCliente}
+                                    </Typography>
+                                </Box>
+
+                                <AddReactionIcon
+                                    sx={{
+                                        color: "#4F9D69",
+                                        fontSize: 40
+                                    }}
+                                />
+                            </Box>
+
+                            <Divider
+                                sx={{
+                                    my: 2,
+                                    borderColor: "#7A7A7A"
+                                }}
+                            />
+
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "#7A7A7A",
+                                    fontSize: "0.7rem"
+                                }}
+                            >
+                                Últimos por mes:
+                            </Typography>
+                        </Paper>
+                    </Grid>
+
+
+                    {/* Clientes inactivos */}
+                    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2,
+                                borderRadius: 3,
+                                border: "1px solid #D1D0CF",
+                                backgroundColor: "#fff",
+                                height: "100%",
+                                boxSizing: "border-box"
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: "#7A7A7A" }}
+                                    >
+                                        Clientes inactivos
+                                    </Typography>
+
+                                    <Typography
+                                        sx={{
+                                            color: "#7A7A7A",
+                                            fontSize: "2.5rem",
+                                            fontWeight: "bold"
+                                        }}
+                                    >
+                                        {cantidadClienteInactiv}
+                                    </Typography>
+                                </Box>
+
+                                <SentimentDissatisfiedIcon
+                                    sx={{
+                                        color: "#4F9D69",
+                                        fontSize: 40
+                                    }}
+                                />
+                            </Box>
+
+                            <Divider
+                                sx={{
+                                    my: 2,
+                                    borderColor: "#7A7A7A"
+                                }}
+                            />
+
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "#7A7A7A",
+                                    fontSize: "0.7rem"
+                                }}
+                            >
+                                Últimos por mes:
+                            </Typography>
+                        </Paper>
+                    </Grid>
                 </Grid>
-                <Grid sx={{width:"10px"}} size={{ xs: 12, md: 6 }}> 
-                         {/* Cantidad de planes  */}
-                         <Typography variant="h7"   >
-                        Cantidad de planes
-                             </Typography>
-                           <PieChart width={300} height={200}>
+
+                <Grid container spacing={3} sx={{ mt: 3 }}>
+
+                    <Grid size={{ xs: 12, md: 6 }}  >
+                        {/* ultimos ingresos */}
+                        <Box sx={{ backgroundColor: "#fff", borderRadius: 2, p: 2 }} >
+                            <Typography variant="body2" sx={{ pb: 2 }} >
+                                Ultimos ingresos de hoy
+                            </Typography>
+
+                            <DataGrid
+                                sx={{ width: "100%", borderRadius: 2 }}
+                                rows={ultimasAsistencias.asistencias || []}
+                                getRowId={(row) => row.id_asistencia}
+                                columns={[
+                                    { field: 'Cliente', headerName: 'Cliente', width: 150 },
+                                    { field: 'Hora', headerName: 'Hora', width: 150 },
+                                    {
+                                        field: 'Estado', headerName: 'Estado', width: 150, renderCell: (params) => (
+                                            <Chip
+                                                label={params.value} color={params.value === "Activo" ? "success" : "error"} size="small" variant="filled"
+                                            />
+                                        )
+                                    },
+                                ]}
+                                hideFooter
+                                slots={{ noRowsOverlay: () => <Typography>No hay datos para mostrar</Typography> }}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid sx={{ width: "10px" }} size={{ xs: 12, md: 6 }}>
+                        {/* Cantidad de planes  */}
+                        <Box sx={{ backgroundColor: "#fff", borderRadius: 2, p: 2 }} >
+                            <Typography variant="body2" sx={{ pb: 2 }}  >
+                                Cantidad de planes
+                            </Typography>
+                            <PieChart width={350} height={250}>
                                 <Pie
                                     data={cantidadPlan || []}
                                     dataKey="cantidad"
                                     nameKey="nombre"
                                     cx="50%"
-                                    cy="50%"
-                                    outerRadius={75}
-                                    label
+                                    cy="43%"
+                                    innerRadius={50}
+                                    outerRadius={90}
+
                                 >
                                     {cantidadPlan.map((entry, index) => (
-                                    <Cell
-                                        key={index}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
+                                        <Cell
+                                            key={index}
+                                            fill={COLORS[index % COLORS.length]}
+                                        />
                                     ))}
                                 </Pie>
                                 <Tooltip />
                                 <Legend />
-                                </PieChart>
-                                </Grid>
-                                 </Grid>         
-                         </Container>
-                       </div>
-    );  
+                            </PieChart>
+                        </Box>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 12 }}>
+                        {/* estadiscas de ingreso por horas */}
+                        <Box sx={{ backgroundColor: "#fff", borderRadius: 2, p: 2 }} >
+                            <Typography variant="body2" sx={{ pb: 2 }}  >
+                                 Estadisticas de ingreso por horas
+                            </Typography>
+                            <BarChart width={"100%"} height={250} data={datosGrafico}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="hours" />
+                                <Tooltip />
+                              
+                                <Bar dataKey="Cantidad" fill="#8884d8" />
+                            </BarChart>
+                        </Box>
+                    </Grid>
+
+                </Grid>
+
+
+            </Container>
+        </div>
+    );
 }
 export default dashboard;
